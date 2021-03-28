@@ -23,5 +23,5 @@ if (!process.argv[2]) {
   build();
 } else {
   build(true);
-  start();
+  // start();
 }
