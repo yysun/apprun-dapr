@@ -34,14 +34,14 @@ app.post('/add', (req, res) => {
   }
 });
 
-app.get('/dapr/subscribe', (req, res) => {
-  res.json([
-    {
-      pubsubname: "pubsub",
-      topic: "add",
-      route: "add"
-    }
-  ]);
-});
+// app.get('/dapr/subscribe', (req, res) => {
+//   res.json([
+//     {
+//       pubsubname: "pubsub",
+//       topic: "add",
+//       route: "add"
+//     }
+//   ]);
+// });
 
 app.listen(process.env.PORT || port, () => console.log(`Service listening on port ${port}!`));
