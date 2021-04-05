@@ -1,7 +1,37 @@
-##
+## Use AppRun with Dapr
 
-* Use _npm start_ to start the dev server
-* Use _npm test_ to run unit tests
-* Use _npm run build_ to build for production
+![](apprun-dapr.png)
 
-This is an application built with [AppRun](https://github.com/yysun/apprun).
+## Start dapr
+
+```
+dapr run --dapr-http-port 3500
+```
+
+## Start Web Server
+
+```
+dapr run --app-id server --app-port 8080 node .
+```
+
+## Start a Service
+
+```
+dapr run --app-id service --app-port 3000 node service.js
+```
+
+## Run Frontend App
+
+http://localhost:8080
+
+
+
+## Publish a Message
+
+```
+dapr publish --publish-app-id service --pubsub pubsub --topic add --data '{"data":[1,10],"id":"dapr"}'
+```
+
+
+
+.
