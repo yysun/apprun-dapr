@@ -1,12 +1,11 @@
 const express = require('express');
 const request = require('request');
-const bodyParser = require('body-parser');
 const webSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
 const clients = {};
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static('.'))
 
 const daprPort = process.env.DAPR_HTTP_PORT || 3500;
