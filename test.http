@@ -1,17 +1,22 @@
 
-# dapr run --dapr-http-port 3500
-# dapr run --app-id server --app-port 8080 node index.js
-# dapr run --app-id service --app-port 3000 node service.js
+### RESET
 POST http://localhost:3500/v1.0/invoke/service/method/add
 content-type: application/json
 
-{ "data": {"state": 0, "delta": 1,"id": "invoke" }}
+{"data": { "data": [1, 1], "wsid": "invoke", "event": "add" }}
 
 
-###
+### PUBSUB
 #dapr publish --publish-app-id service --pubsub pubsub --topic add --data '{"data":[1,10],"id":"dapr"}'
 POST http://localhost:3500/v1.0/publish/pubsub/add
 content-type: application/json
 
 
-{ "data": {"state": 0, "delta": 1,"id": "pubsub" }}
+{ "data": [1, 1], "wsid": "pubsub", "event": "add" }
+
+###
+POST http://localhost:3500/v1.0/publish/pubsub/ws
+content-type: application/json
+
+
+{ "data": 10, "wsid": "pubsub", "event": "add" }

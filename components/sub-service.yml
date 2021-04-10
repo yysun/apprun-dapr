@@ -8,3 +8,6 @@ spec:
   pubsubname: pubsub
 scopes:
 - service
+
+
+
