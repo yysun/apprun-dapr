@@ -5,11 +5,13 @@
 POST http://localhost:3500/v1.0/invoke/service/method/add
 content-type: application/json
 
-{ "data": {"data": [1, 10], "id": "invoke" }}
+{ "data": {"state": 0, "delta": 1,"id": "invoke" }}
 
 
+###
 #dapr publish --publish-app-id service --pubsub pubsub --topic add --data '{"data":[1,10],"id":"dapr"}'
 POST http://localhost:3500/v1.0/publish/pubsub/add
 content-type: application/json
 
-{ "data": {"data": [1, 10], "id": "pubsub" }}
+
+{ "data": {"state": 0, "delta": 1,"id": "pubsub" }}
