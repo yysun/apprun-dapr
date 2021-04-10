@@ -17,20 +17,21 @@ class Counter extends Component {
 
 new Counter().start(document.body);
 
-const ws = new WebSocket(`ws://${location.host}`);
-ws.onopen = () => console.log('websocket connected');
-
-ws.onmessage = function (msg) {
-  console.log('received: ', msg.data);
-  const { event, data} = JSON.parse(msg.data);
-  app.run('@@', data);
+let ws;
+function open_ws() {
+  ws = new WebSocket(`ws://${location.host}`);
+  ws.onopen = () => console.log('websocket connected');
+  ws.onclose = () => console.log('websocket disconnected');
+  ws.onmessage = function (msg) {
+    console.log('received: ', msg.data);
+    const { event, data } = JSON.parse(msg.data);
+    app.run('@@', data);
+  }
 }
+open_ws();
 
 app.on('@add', (state, delta) => {
-  // console.log(state, delta);
-  // const value = state + delta;
-  // app.run('@value', value);
-
+  if (ws.readyState === WebSocket.CLOSED) open_ws();
   const msg = {
     event: 'add',
     data: [ state, delta ]
