@@ -5,12 +5,11 @@ class Counter extends Component {
 
   view = state => <div>
     <h1>{state}</h1>
-    <button $onclick={['add', -1]}>-1</button>
-    <button $onclick={['@add', state, 1]}>+1</button>
+    <button $onclick={['@add', state, -1]}>-1</button>
+    <button $onclick={['@add', state, +1]}>+1</button>
   </div>;
 
   update = {
-    'add': (state, delta) => state + delta,
     '@@': (_, v) => v
   };
 }
