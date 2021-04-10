@@ -2,35 +2,24 @@
 
 ![](apprun-dapr.png)
 
-## Start dapr
+## Start the Services
 
 ```
-dapr run --dapr-http-port 3500
+npm start
 ```
 
-## Start Web Server
-
-```
-dapr run --app-id server --app-port 8080 node .
-```
-
-## Start a Service
-
-```
-dapr run --app-id service --app-port 3000 node service.js
-```
-
-## Run Frontend App
+## Run the Frontend App
 
 http://localhost:8080
 
+Watch messages in the server console and browser console.
 
 
-## Publish a Message
+Have fun.
 
-```
-dapr publish --publish-app-id service --pubsub pubsub --topic add --data '{"data":[1,10],"id":"dapr"}'
-```
+
+(C) 2021 Yiyi Sun
+
 
 
 
