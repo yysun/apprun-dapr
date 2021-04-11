@@ -82,6 +82,7 @@ wss.on('connection', function (ws, req) {
 
   ws.on('close', function () {
     console.log('closing ws connection');
+    delete clients[wsid];
   });
 
   console.log('started ws connection');
