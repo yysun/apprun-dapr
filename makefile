@@ -10,7 +10,10 @@ webserver:
 service:
 	dapr run -d=./components --app-id service --app-port 3000 node service.js
 
-start: client dapr webserver service
+state-service:
+	dapr run -d=./components --app-id state-service --app-port 3001 node state-service.js
+
+start: client dapr webserver service todo
 
 
 

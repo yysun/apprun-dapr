@@ -1,15 +1,12 @@
-
 ### REST
 POST http://localhost:3500/v1.0/invoke/service/method/add
 content-type: application/json
 
 {"data": { "data": [1, 1], "wsid": "invoke", "event": "add" }}
 
-
 ### PUBSUB
 POST http://localhost:3500/v1.0/publish/pubsub/add
 content-type: application/json
-
 
 { "data": [1, 1], "wsid": "pubsub", "event": "add" }
 
@@ -17,5 +14,33 @@ content-type: application/json
 POST http://localhost:3500/v1.0/publish/pubsub/ws
 content-type: application/json
 
-
 { "data": 10, "wsid": "pubsub", "event": "add" }
+
+### Sign in
+POST http://localhost:3500/v1.0/invoke/server/method/signin
+content-type: application/json
+
+{}
+
+### REST Save-State
+POST http://localhost:3500/v1.0/state/statestore
+content-type: application/json
+
+[{ "key": "key1", "value": "value1"}]
+
+### REST Get-State
+GET http://localhost:3500/v1.0/state/statestore/key1
+content-type: application/json
+
+### PUBSUB Save-State
+POST http://localhost:3500/v1.0/publish/pubsub/save-state
+content-type: application/json
+
+{ "key":"12", "value": "12", "wsid": "pubsub", "event": "save-state" }
+
+### PUBSUB Get-State
+POST http://localhost:3500/v1.0/publish/pubsub/get-state
+content-type: application/json
+
+{ "key":"12", "wsid": "pubsub", "event": "get-state" }
+

@@ -28,10 +28,6 @@ app.post('/ws', (req, res) => {
   res.sendStatus(200);
 });
 
-app.post('/signin', (req, res) => {
-  res.status(200).send(uuidv4());
-});
-
 const port = 8000;
 const server = app.listen(process.env.PORT || port, () => console.log(`Listening on port ${port}!`));
 
