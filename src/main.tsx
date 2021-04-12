@@ -7,6 +7,6 @@ import Todo from './Todo';
 app.render(document.body, <Layout />);
 
 const element = 'my-app';
-new Home().start(element);
-new Counter().start(element);
-Todo.start(element);
+new Home().mount(element);
+new Counter().mount(element);
+new Todo().mount(element);
