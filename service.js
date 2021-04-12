@@ -5,9 +5,19 @@ const app = express();
 app.use(express.json());
 app.use(express.json({ type: 'application/*+json' }));
 
+app.get('/dapr/subscribe', (_req, res) => {
+  res.json([
+    {
+      pubsubname: "pubsub",
+      topic: "add",
+      route: "add"
+    },
+  ]);
+});
+
 app.post('/add', (req, res) => {
   try {
-    console.log('Received by "/add": ', req.headers['content-type'], req.body);
+    // console.log('Received by "/add": ', req.headers['content-type'], req.body);
     const { event, data, wsid } = req.body.data;
     const [num1, num2] = data;
     const value = num1 + num2

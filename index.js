@@ -10,12 +10,26 @@ app.use(express.json());
 app.use(express.json({ type: 'application/*+json' }));
 app.use(express.static('public'))
 
+app.get('/dapr/subscribe', (_req, res) => {
+  res.json([
+    {
+      pubsubname: "pubsub",
+      topic: "ws",
+      route: "ws"
+    },
+  ]);
+});
+
 app.post('/ws', (req, res) => {
   const { wsid, event, data } = req.body.data;
   clients[wsid]?.send(JSON.stringify({
     event, data
   }));
   res.sendStatus(200);
+});
+
+app.post('/signin', (req, res) => {
+  res.status(200).send(uuidv4());
 });
 
 const port = 8000;
@@ -29,7 +43,6 @@ wss.on('connection', function (ws, req) {
   ws.on('message', function (msg) {
     try {
       const json = JSON.parse(msg);
-      console.log('==>', json);
       publish(json.event, { ...json, wsid });
     } catch (e) {
       ws.send(e.toString());
