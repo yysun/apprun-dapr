@@ -6,7 +6,7 @@
 
 We can connect AppRun events to Dapr PubSub through WebSockets. This project is a demo of using AppRun with Dapr.
 
-![](apprun-dapr.png)
+![](public/apprun-dapr.png)
 
 ## How It Works
 
