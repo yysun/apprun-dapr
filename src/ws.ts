@@ -22,7 +22,7 @@ const open_ws = () => {
   ws.onmessage = (msg) => {
     const { event, data } = JSON.parse(msg.data);
     console.log('received: ', event, data);
-    app.run('@@' + event, data ? JSON.parse(data) : '');
+    app.run('@@' + event, data != null ? JSON.parse(data) : '');
   }
 }
 app.on('@ws', (event, data) => {
