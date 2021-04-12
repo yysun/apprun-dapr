@@ -1,5 +1,5 @@
 
-### RESET
+### REST
 POST http://localhost:3500/v1.0/invoke/service/method/add
 content-type: application/json
 
@@ -7,14 +7,13 @@ content-type: application/json
 
 
 ### PUBSUB
-#dapr publish --publish-app-id service --pubsub pubsub --topic add --data '{"data":[1,10],"id":"dapr"}'
 POST http://localhost:3500/v1.0/publish/pubsub/add
 content-type: application/json
 
 
 { "data": [1, 1], "wsid": "pubsub", "event": "add" }
 
-###
+### Message to WebSockets
 POST http://localhost:3500/v1.0/publish/pubsub/ws
 content-type: application/json
 

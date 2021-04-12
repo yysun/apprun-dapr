@@ -9,11 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(express.json({ type: 'application/*+json' }));
 
-app.use(express.static('.'))
+app.use(express.static('public'))
 
 const daprPort = process.env.DAPR_HTTP_PORT || 3500;
 const daprUrl = `http://localhost:${daprPort}/v1.0`;
-const port = 8080;
+const port = 8000;
 const pubsubName = 'pubsub';
 
 const publish = (topic, json) => {
@@ -28,11 +28,6 @@ app.post('/ws', (req, res) => {
     event, data
   }));
   res.sendStatus(200);
-});
-
-app.post('/add', (req, res) => {
-  const serviceUrl = `${daprUrl}/invoke/service/method/add`;
-  req.pipe(request(serviceUrl)).pipe(res);
 });
 
 const server = app.listen(process.env.PORT || port, () => console.log(`Listening on port ${port}!`));

@@ -1,11 +1,11 @@
 client:
-	esbuild src/main.tsx --outfile=dist/main.js --bundle --minify --sourcemap --watch
+	esbuild src/main.tsx --outfile=public/main.js --bundle --minify --sourcemap --watch
 
 dapr:
-	dapr run --dapr-http-port 3500 -d=./components
+	dapr run --dapr-http-port 3500 -d=./components --app-id apprun-dapr
 
 webserver:
-	dapr run -d=./components --app-id server --app-port 8080 node .
+	dapr run -d=./components --app-id server --app-port 8000 node .
 
 service:
 	dapr run -d=./components --app-id service --app-port 3000 node service.js
