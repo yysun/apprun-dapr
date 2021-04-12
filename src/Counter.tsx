@@ -19,6 +19,7 @@ export default class Counter extends Component {
   state = 0;
 
   view = state => <div>
+    <h3>Counter</h3>
     <h1>{state}</h1>
     <button $onclick='-1'>-1</button>
     <button $onclick='+1'>+1</button>
@@ -27,7 +28,7 @@ export default class Counter extends Component {
   </div>;
 
   update = {
-    '#, #Home, #Counter': state => state,
+    '#Counter': state => state,
     '-1': state => { app.run('@ws', 'add', [state, -1]) },
     '+1': state => { app.run('@ws', 'add', [state, +1]) },
     '@@add': (_, v) => v
