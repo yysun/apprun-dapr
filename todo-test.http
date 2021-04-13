@@ -1,0 +1,55 @@
+### REST Create Todo
+POST http://localhost:3002/create-todo
+content-type: application/json
+
+{"data": {"data": { "title":"12", "done": false} , "wsid": "pubsub", "event": "create-todo" }}
+
+
+#-------------------------------------------------------
+### INVOKE Create Todo
+POST http://localhost:3500/v1.0/invoke/todo-service/method/create-todo
+content-type: application/json
+
+{"data": {"data": { "title":"12", "done": false} , "wsid": "pubsub", "event": "create-todo" }}
+
+
+#-------------------------------------------------------
+### PUBSUB Create Todo
+POST http://localhost:3500/v1.0/publish/pubsub/create-todo
+content-type: application/json
+
+{ "data": {"title":"12", "done": false}, "wsid": "pubsub", "event": "create-todo" }
+
+
+### REST Get Todo
+POST http://localhost:3002/get-todo
+content-type: application/json
+
+{"data": { "data": { "id":"todo:1"}, "wsid": "pubsub", "event": "get-todo" }}
+
+
+### REST Get All Todo
+POST http://localhost:3002/get-all-todo
+content-type: application/json
+
+{"data": { "wsid": "pubsub", "event": "get-all-todo" }}
+
+### REST Update Todo
+POST http://localhost:3002/update-todo
+content-type: application/json
+
+{"data": {"data": {"id":"todo:1", "title":"1212", "done": true} , "wsid": "pubsub", "event": "update-todo" }}
+
+
+### REST Delete Todo
+POST http://localhost:3002/delete-todo
+content-type: application/json
+
+{"data": { "data": { "id":"todo:5" }, "wsid": "pubsub", "event": "delete-todo" }}
+
+
+### REST Delete All Todo
+POST http://localhost:3002/delete-all-todo
+content-type: application/json
+
+{"data": { "wsid": "pubsub", "event": "delete-all-todo" }}
