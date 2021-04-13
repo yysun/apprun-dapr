@@ -8,9 +8,9 @@ const intro = `
 2. The Counter component publishes an AppRun local event ('-1' or '+1')
 3. The local event handler publishes an AppRun global event: '@ws' with payload _{event: 'add', data: [state, delta]}_
 4. AppRun global event handler sends the payload to the WebSocket
-5. The web server (index.js) receives the WebSocket message and then publishes an Dapr PubSub message
-6. The Dapr service (service.js) receives the Dapr message. It does the 'add' calculation and then publishes the result to Dapr PubSub
-7. The web server receives the Dapr message and send it back to the client through the WebSocket
+5. The web server (index.js) receives the WebSocket message and then publishes an Dapr PubSub event
+6. The Dapr service (service.js) receives the Dapr event. It does the 'add' calculation and then publishes the result to Dapr PubSub
+7. The web server receives the Dapr event and send it back to the client through the WebSocket
 8. The client side app receives the WebSocket message and publishes an AppRun global event '@@'
 9. The Counter component handles the '@@' event and sets the new state. AppRun renders the new state.
 `;

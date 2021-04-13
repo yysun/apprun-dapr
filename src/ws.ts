@@ -21,12 +21,12 @@ const open_ws = () => {
   }
   ws.onmessage = (msg) => {
     const { event, data } = JSON.parse(msg.data);
-    console.log('received: ', event, data);
-    app.run('@@' + event, data != null ? JSON.parse(data) : '');
+    console.log('received: ', { event, data });
+    app.run('@@' + event, data);
   }
 }
 app.on('@ws', (event, data) => {
-  const msg = { event, data };
+  const msg = data ? { event, data } : { event };
   if (!ws) open_ws();
   if (ws.readyState === WebSocket.OPEN) ws_send(msg);
   else ws_queue.push(msg);
