@@ -28,7 +28,7 @@ app.post('/get-state', async (req, res) => {
     res.status(200).send(state);
     publish('ws', { event, key, data: state, wsid });
   } catch (ex) {
-    res.status(500).send(ex.toString);
+    res.status(500).send(ex.toString());
   }
 });
 
@@ -40,7 +40,7 @@ app.post('/save-state', async (req, res) => {
     res.status(200).send(state);
     publish('ws', { event, key, data: state, wsid });
   } catch (ex) {
-    res.status(500).send(ex.toString);
+    res.status(500).send(ex.toString());
   }
 });
 
