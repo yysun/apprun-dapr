@@ -83,9 +83,11 @@ export default class TodoComponent2 extends Component {
 
   update = {
     '#Todo': state => state,
-    '@@get-all-todo': (state, data) => {
-      const new_state = ({ ...state, todos: data && JSON.parse(data) || [] });
+    '@@create-todo, @@delete-todo, @@update-todo, @@delete-all-todo':
+      () => { app.run('@ws', 'get-all-todo'); },
+    '@@get-all-todo': (state, todos) => {
+      const new_state = ({ ...state, todos });
       this.setState(new_state, { render: location.hash === '#Todo' });
-    },
+    }
   };
 }
