@@ -13,7 +13,10 @@ service:
 state-service:
 	dapr run -d=./components --app-id state-service --app-port 3001 node state-service.js
 
-start: client dapr webserver service todo
+todo-service:
+	dapr run -d=./components --app-id todo-service --app-port 3001 node todo-service.js
+
+start: client dapr webserver service todo-service state-service
 
 
 

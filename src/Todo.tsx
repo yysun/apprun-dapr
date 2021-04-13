@@ -3,22 +3,12 @@ import marked from 'marked';
 
 const intro = `
 #### How It Works
-1. Todo component generates an app_id and stores it in the local storage
-2. Todo component publishes the 'get-state' event to Dapr using the app_id as the key through the WebSocket
-3. The state service (state-service.js) receives the event and gets the state from Dapr state store
-4. The state service publishes the result to Dapr PubSub
-5. The web server (server.js) receives the result form Dapr PubSub and sends it back to the client through the WebSocket
-6. Todo components receives the state and renders the web page
-7. When users add, delete, update, and filter the Todo list, Todo component's state changes.
-8. Todo component publishes 'save-state' event to Dapr with the app_id and the changed state
-9. The state service receives the event and saves the state to Dapr state store
+1. When users add, delete, update, and filter the Todo list, Todo component publishes events to Dapr through the WebSocket.
+2. The todo service (todo-service.js) receives the event and updates redis db
+3. The todo service publishes the result to Dapr PubSub
+4. The web server (server.js) receives the result form Dapr PubSub and sends it back to the client through the WebSocket
+5. Todo components receives the state and renders the web page
 `;
-
-let app_id = localStorage.getItem('app_id');
-if (!app_id) {
-  app_id = Date.now().toString();
-  localStorage.setItem('app_id', app_id)
-}
 
 const ENTER = 13
 
@@ -27,50 +17,37 @@ const init_state = {
   todos: [],
 }
 
-const keyup = (state, e) => {
-  const input = e.target;
-  state.new_todo = input.value.trim();
-  if (e.keyCode === 13 && state.new_todo) {
-    input.value = '';
-    return add(state);
+const keyup = e => {
+  if (e.keyCode === ENTER && e.target.value) {
+    add();
   }
 };
 
-const add = (state) => ({
-  ...state,
-  todos: [...state.todos, { title: state.new_todo, done: false }]
-});
-const toggle = (state, idx) => ({
-  ...state,
-  todos: [
-    ...state.todos.slice(0, idx),
-    { ...state.todos[idx], done: !state.todos[idx].done },
-    ...state.todos.slice(idx + 1)
-  ]
-});
+const add = () => {
+  const input = document.getElementById('new_todo') as HTMLInputElement;
+  app.run('@ws', 'create-todo', {
+    title: input.value,
+    done: 0
+  });
+  input.value = '';
+};
 
-const remove = (state, idx) => ({
-  ...state,
-  todos: [
-    ...state.todos.slice(0, idx),
-    ...state.todos.slice(idx + 1)
-  ]
-});
+const toggle = (_, todo) => { app.run('@ws', 'update-todo', { ...todo, done: !todo.done }) };
 
-const clear = () => init_state;
+const remove = (_, todo) => { app.run('@ws', 'delete-todo', todo) };
+
+const clear = () => { app.run('@ws', 'delete-all-todo') };
 
 const search = (state, filter) => ({ ...state, filter });
 
-const Todo = ({todo, idx}) => <li>
-  <input type="checkbox" checked={todo.done} $onclick={[toggle, idx]}></input>
+const Todo = ({todo}) => <li>
+  <input type="checkbox" checked={todo.done} $onclick={[toggle, todo]}></input>
   <span style={{color: todo.done ? 'green' : 'red'}}>&nbsp;
-    {todo.title} &nbsp;<a href='javascript:void(0)' $onclick={[remove, idx]}>✖️</a></span>
+    {todo.title} &nbsp;<a href='javascript:void(0)' $onclick={[remove, todo]}>✖️</a></span>
 </li>;
 
-export default class TodoComponent extends Component {
-  state = () => {
-    app.run('@ws', 'get-state', { key: app_id });
-  }
+export default class TodoComponent2 extends Component {
+  state = () => { app.run('@ws', 'get-all-todo'); return init_state; }
 
   view = (state) => {
     const styles = (filter) => ({
@@ -91,11 +68,11 @@ export default class TodoComponent extends Component {
             .filter(todo => state.filter === 0 ||
               (state.filter === 1 && !todo.done) ||
               (state.filter === 2 && todo.done))
-            .map((todo, idx) => <Todo todo={todo} idx={idx} />)
+            .map(todo => <Todo todo={todo} />)
         }
       </ul>
       <div>
-        <input placeholder='add todo' $onkeyup={keyup}/>
+        <input placeholder='add todo' onkeyup={keyup} id="new_todo" />
         <button $onclick={[add]}>Add</button>
         <button $onclick={[clear]}>Clear</button>
       </div>
@@ -106,12 +83,9 @@ export default class TodoComponent extends Component {
 
   update = {
     '#Todo': state => state,
-    '@@get-state': (_, data) => {
-      const new_state = data && JSON.parse(data);
-      this.setState(new_state || init_state, { render: location.hash === '#Todo' });
+    '@@get-all-todo': (state, data) => {
+      const new_state = ({ ...state, todos: data && JSON.parse(data) || [] });
+      this.setState(new_state, { render: location.hash === '#Todo' });
     },
-    '@@save-state': state => { }
   };
-
-  rendered = state => app.run('@ws', 'save-state', {key: app_id, value: state });
 }
