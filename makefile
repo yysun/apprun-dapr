@@ -1,4 +1,4 @@
-client:
+build:
 	esbuild src/main.tsx --outfile=public/main.js --bundle --minify --sourcemap --watch
 
 dapr:
@@ -13,7 +13,13 @@ service:
 todo-service:
 	dapr run -d=./components --app-id todo-service --app-port 3002 node todo-service.js
 
-start: client dapr webserver service todo-service
+dashboard:
+	dapr dashboard
+
+run-app:
+	open "http://localhost:8000"
+
+start: build dapr webserver service todo-service dashboard run-app
 
 
 
