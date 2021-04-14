@@ -6,36 +6,37 @@ const pubsubName = 'pubsub';
 const storeName = 'statestore';
 const headers = { 'Content-Type': 'application/json' };
 
+const get = async url => {
+  const response = await fetch(url, { headers });
+  return response.text();
+}
+
+const post = async (url, data) => {
+  const response = await fetch(url, {
+    method: 'post',
+    body: JSON.stringify(data),
+    headers
+  });
+  return response.text();
+}
+
 module.exports = {
-  
   publish: async (topic, data) => {
+    if (topic === 'ws') topic += '?metadata.ttlInSeconds=1';
     console.log("Publishing: ", topic, data);
     const publishUrl = `${daprUrl}/publish/${pubsubName}/${topic}`;
-    const response = await fetch(publishUrl, {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers
-    });
-    return response.text();
+    return post(publishUrl, data);
   },
 
   saveState: async (key, value) => {
     const storeUrl = `${daprUrl}/state/${storeName}`;
-    const state = [{key, value}];
-    const response = await fetch(storeUrl, {
-      method: 'post',
-      body: JSON.stringify(state),
-      headers
-    });
-    return response.text();
+    const state = [{ key, value }];
+    return post(storeUrl, state);
   },
 
   getState: async (key) => {
     const storeUrl = `${daprUrl}/state/${storeName}/${key}`;
-    const response = await fetch(storeUrl, {
-      headers
-    });
-    return response.text();
+    return get(storeUrl);
   }
 
 }
