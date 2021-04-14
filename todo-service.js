@@ -1,3 +1,4 @@
+// @ts-check
 const { publish } = require('./dapr');
 
 const express = require('express');
@@ -22,7 +23,7 @@ const DEL = promisify(redis.DEL).bind(redis);
 // register Dapr subscriptions
 app.get('/dapr/subscribe', (_req, res) => {
   res.json([
-    'get-all-todo',
+    // 'get-all-todo',
     'get-todo',
     'create-todo',
     'update-todo',
@@ -56,26 +57,23 @@ const get_todo = async (id) => {
 }
 
 app.post('/get-all-todo', async (req, res) => {
-  try {
-    const { event, wsid } = req.body.data;
+  run(req, res, async () => {
     const ids = await HKEYS(todo_hash);
     const todos = await Promise.all(ids.map(id => get_todo(id)));
-    res.status(200).send(todos);
-    publish('ws', { event, data: todos, wsid });
-  } catch (ex) {
-    res.status(500).send(ex.toString());
-  }
+    return todos;
+  })
 });
 
-app.post('/create-todo', (req, res) =>
+app.post('/create-todo', (req, res) => {
   run(req, res, async (data) => {
     const dat = await INCR(todos_id_max);
     const id = `${todo_id_prefix}:${dat}`;
     const todo = { id, ...data }
     await HMSET(todo_hash, id, JSON.stringify(todo));
+    publish('new-todo', { event: 'new-todo', data: todo});
     return todo;
   })
-);
+});
 
 app.post('/get-todo', (req, res) => {
   run(req, res, async (data) => {
@@ -94,7 +92,6 @@ app.post('/update-todo', async (req, res) => {
 });
 
 app.post('/delete-todo', async (req, res) => {
-
   run(req, res, async (data) => {
     const { id } = data;
     await HDEL(todo_hash, id);
@@ -102,13 +99,13 @@ app.post('/delete-todo', async (req, res) => {
   })
 });
 
-app.post('/delete-all-todo', (req, res) =>
+app.post('/delete-all-todo', (req, res) => {
   run(req, res, async (data) => {
     await DEL(todo_hash);
     await DEL(todos_id_max);
     return [];
   })
-);
+});
 
 const port = 3002;
 app.listen(process.env.PORT || port, () => console.log(`Service listening on port ${port}!`));

@@ -5,7 +5,6 @@ app.use(express.json({ type: 'application/*+json' }));
 
 const redis = require("redis").createClient();
 const { promisify } = require("util");
-const { join } = require('path');
 redis.on("error", function (error) {
   console.error(error);
 });
@@ -17,7 +16,7 @@ const XADD = promisify(redis.XADD).bind(redis);
 app.get('/dapr/subscribe', (_req, res) => {
   res.json([
     'get-todo',
-    'create-todo',
+    'new-todo',
     'update-todo',
     'delete-todo',
     'delete-all-todo']
@@ -27,7 +26,6 @@ app.get('/dapr/subscribe', (_req, res) => {
       route: '/xadd'
     })));
 });
-
 
 const stream_name = 'todo_stream';
 
