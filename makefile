@@ -13,6 +13,9 @@ service:
 todo-service:
 	dapr run -d=./components --app-id todo-service --app-port 3002 node todo-service.js
 
+todo-stream:
+	dapr run -d=./components --app-id todo-stream --app-port 3003 node todo-stream.js
+
 dashboard:
 	dapr dashboard
 
