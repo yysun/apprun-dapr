@@ -22,9 +22,11 @@ app.get('/dapr/subscribe', (_req, res) => {
 
 app.post('/ws', (req, res) => {
   const { wsid, event, data } = req.body.data;
-  clients[wsid]?.send(JSON.stringify({
-    event, data
-  }));
+  const json = JSON.stringify({ event, data});
+  if (wsid === '*') {
+    for (let id in clients) clients[id]?.send(json);
+  }
+  else wsid && clients[wsid]?.send(json);
   res.sendStatus(200);
 });
 

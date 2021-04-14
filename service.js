@@ -18,11 +18,11 @@ app.get('/dapr/subscribe', (_req, res) => {
 app.post('/add', (req, res) => {
   try {
     // console.log('Received by "/add": ', req.headers['content-type'], req.body);
-    const { event, data, wsid } = req.body.data;
+    const { event, data } = req.body.data;
     const [num1, num2] = data;
     const value = num1 + num2
     res.status(200).send(value.toString());
-    publish('ws', {event, data: value, wsid});
+    publish('ws', {event, data: value, wsid: '*'});
   } catch (ex) {
     res.status(500).send(ex.toString);
   }
