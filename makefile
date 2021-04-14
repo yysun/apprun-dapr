@@ -16,6 +16,9 @@ webserver:
 service:
 	dapr run -d=./components --app-id service --app-port 3000 node service.js
 
+state-service:
+	dapr run -d=./components --app-id state-service --app-port 3001 node state-service.js
+
 todo-service:
 	dapr run -d=./components --app-id todo-service --app-port 3002 node todo-service.js
 
@@ -25,7 +28,7 @@ todo-stream:
 todo-sql:
 	dapr run -d=./components --app-id todo-sql --app-port 3004 node todo-sql.js
 
-start: dapr dashboard webserver service todo-service todo-sql build-app run-app
+start: dapr dashboard webserver service state-service todo-service todo-sql todo-stream build-app run-app
 
 
 
