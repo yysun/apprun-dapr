@@ -9,7 +9,7 @@ This is a demo of using AppRun with Dapr through WebSockets.
 * [AppRun](https://github.com/yysun/apprun) is a JavaScript library that uses the Elm-inspired architecture, events, and components.
 * [Dapr](https://dapr.io) is a portable, serverless, event-driven runtime for building resilient, stateless and stateful microservices.
 
-![](apprun-dapr.png)
+![](apprun-dapr-demo.png)
 
 * [Counter app](/#Counter) - example of using [Dapr PubSub](https://docs.dapr.io/developing-applications/building-blocks/pubsub/)
 * [Todo app](/#Todo) - example of using [Dapr State Management](https://docs.dapr.io/developing-applications/building-blocks/state-management/state-management-overview/)
