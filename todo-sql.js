@@ -54,10 +54,10 @@ const run = async (req, res, fn) => {
     const { event, data, wsid } = req.body.data;
     result = await fn(db_fns, data);
     result && publish('ws', { event, data: result, wsid });
+    res.status(200).send(result);
   } catch (ex) {
     console.log(ex.toString());
-  } finally {
-    res.status(200).send(result);
+    res.status(500).send(ex.toString());
   }
 }
 
