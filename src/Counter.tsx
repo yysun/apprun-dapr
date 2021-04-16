@@ -29,10 +29,9 @@ const app_id = 'counter-app'
 export default class Counter extends Component {
   state = () => {
     app.run('@ws', 'get-state', { key: app_id });
-    return 0;
   }
 
-  view = state => <div>
+  view = state => location.hash === '#Counter' && <div>
     <h3>Counter</h3>
     <h1>{state}</h1>
     <button $onclick='-1'>-1</button>
@@ -51,9 +50,7 @@ export default class Counter extends Component {
       return value;
     },
     '@@save-state': () => { },
-    '@@get-state': (_, state) => {
-      this.setState(Number(state) || 0, { render: location.hash === '#Counter' });
-    },
+    '@@get-state': (_, state) => Number(state)
   };
 }
 
