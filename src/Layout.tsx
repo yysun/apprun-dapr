@@ -29,6 +29,9 @@ export default () => <div class="container">
           <a class="nav-link" href="#Todo">Todo</a>
         </li>
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a class="nav-link" href="https://github.com/yysun/apprun-dapr" target="_blank">Github</a></li>
+      </ul>
     </div>
   </nav>
   <div class="container" id="my-app"></div>
