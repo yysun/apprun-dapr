@@ -1,17 +1,14 @@
 ## Use AppRun with Dapr
 
-This is a demonstration of using AppRun with Dapr through WebSockets.
+Welcome to the world of AppRun, microservices, CQRS, and Dapr. This is a demonstration of using AppRun with microservices built with Dapr.
 
 * [AppRun](https://github.com/yysun/apprun) is a JavaScript library that uses the Elm-inspired architecture, events, and components.
 * [Dapr](https://dapr.io) is a portable, serverless, event-driven runtime for building resilient, stateless and stateful microservices.
 
-Because AppRun is event-driven, We can connect AppRun events to Dapr PubSub through WebSockets.
 
-![](public/apprun-dapr.png)
+![](public/apprun-dapr-1.png)
 
 ## How It Works
-
-Welcome to the world of AppRun, microservices, CQRS, and Dapr.
 
 ### Fornt End
 
@@ -38,10 +35,12 @@ The backend microservices are built with Dapr, which includes,
 
 ### Architecture
 
+Because AppRun is event-driven, We can connect AppRun events to Dapr PubSub through WebSockets.
+
 ![](public/apprun-dapr-demo.png)
 
 
-## Start the App and Services
+## Getting Started
 
 [Install Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) and [Initialize Dapr](https://docs.dapr.io/getting-started/install-dapr-selfhost/) if you haven't.
 
