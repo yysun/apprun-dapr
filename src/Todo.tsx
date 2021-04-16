@@ -58,6 +58,7 @@ export default class TodoComponent2 extends Component {
   state = () => { app.run('@ws', 'get-all-todo'); return init_state; }
 
   view = (state) => {
+    if (location.hash !== '#Todo') return;
     const styles = (filter) => ({
       'font-weight': state.filter === filter ? 'bold' : 'normal',
       cursor: 'pointer'
@@ -93,9 +94,6 @@ export default class TodoComponent2 extends Component {
     '#Todo': state => state,
     '@@create-todo, @@delete-todo, @@update-todo, @@delete-all-todo':
       () => { app.run('@ws', 'get-all-todo'); },
-    '@@get-all-todo': (state, todos) => {
-      const new_state = ({ ...state, todos });
-      this.setState(new_state, { render: location.hash === '#Todo' });
-    }
+    '@@get-all-todo': (state, todos) => ({ ...state, todos })
   };
 }
