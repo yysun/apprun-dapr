@@ -5,7 +5,10 @@ dashboard:
 	dapr dashboard
 
 build-app:
-	esbuild src/main.tsx --outfile=public/main.js --bundle --minify --sourcemap --watch
+	npx esbuild src/main.tsx --outfile=public/main.js --bundle --minify --sourcemap
+
+watch-app:
+	npx esbuild src/main.tsx --outfile=public/main.js --bundle --minify --sourcemap --watch
 
 run-app:
 	open "http://localhost:8000"
@@ -28,7 +31,7 @@ todo-stream:
 todo-sql:
 	dapr run -d=./components --app-id todo-sql --app-port 3004 node todo-sql.js
 
-start: dapr dashboard webserver add-service state-service todo-service todo-sql todo-stream build-app run-app
+start: dapr dashboard webserver add-service state-service todo-service todo-sql todo-stream watch-app run-app
 
 
 
