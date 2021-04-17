@@ -1,6 +1,5 @@
 import { app, Component } from 'apprun';
 import marked from 'marked';
-import './ws';
 
 const intro = `
 #### How It Works

@@ -3,6 +3,7 @@ import Layout from './Layout';
 import Home from './Home';
 import Counter from './Counter';
 import Todo from './Todo';
+import './ws';
 
 app.render(document.body, <Layout />);
 
