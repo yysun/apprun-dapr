@@ -53,7 +53,10 @@ const run = async (req, res, fn) => {
   try {
     const { event, data, wsid } = req.body.data;
     result = await fn(db_fns, data);
-    result && publish('ws', { event, data: result, wsid });
+    result && publish('ws', {
+      event, data: result,
+      wsid: event === 'get-all-todo' ? '*' : wsid
+    });
     res.status(200).send(result);
   } catch (ex) {
     console.log(ex.toString());
