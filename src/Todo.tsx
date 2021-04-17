@@ -55,12 +55,15 @@ const Todo = ({todo}) => <li>
 </li>;
 
 export default class TodoComponent2 extends Component {
-  state = () => { app.run('@ws', 'get-all-todo'); return init_state; }
+  state = () => {
+    app.run('@ws', 'get-all-todo');
+    return init_state;
+  }
 
-  view = (state) => {
+  view = ({ filter, todos }) => {
     if (location.hash !== '#Todo') return;
-    const styles = (filter) => ({
-      'font-weight': state.filter === filter ? 'bold' : 'normal',
+    const styles = _filter => ({
+      'font-weight': filter === _filter ? 'bold' : 'normal',
       cursor: 'pointer'
     })
     return <div>
@@ -73,10 +76,10 @@ export default class TodoComponent2 extends Component {
       </div>
       <ul>
         {
-          state.todos
-            .filter(todo => state.filter === 0 ||
-              (state.filter === 1 && !todo.done) ||
-              (state.filter === 2 && todo.done))
+          todos
+            .filter(todo => filter === 0 ||
+              (filter === 1 && !todo.done) ||
+              (filter === 2 && todo.done))
             .map(todo => <Todo todo={todo} />)
         }
       </ul>
@@ -93,7 +96,7 @@ export default class TodoComponent2 extends Component {
   update = {
     '#Todo': state => state,
     '@@create-todo, @@delete-todo, @@update-todo, @@delete-all-todo':
-      () => { app.run('@ws', 'get-all-todo'); },
+      ({ filter }) => { app.run('@ws', 'get-all-todo-ssr', { filter }); },
     '@@get-all-todo': (state, todos) => ({ ...state, todos })
   };
 }

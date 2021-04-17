@@ -10,10 +10,13 @@ build-app:
 watch-app:
 	npx esbuild src/main.tsx --outfile=public/main.js --bundle --minify --sourcemap --watch
 
+build-ssr:
+	npx esbuild todo-ssr.tsx --outfile=todo-ssr.js --sourcemap --platform=node --format=cjs
+
 run-app:
 	open "http://localhost:8000"
 
-webserver:
+webserver: build-app
 	dapr run -d=./components --app-id webserver --app-port 8000 node .
 
 add-service:
@@ -31,7 +34,10 @@ todo-stream:
 todo-sql:
 	dapr run -d=./components --app-id todo-sql --app-port 3004 node todo-sql.js
 
-start: dapr dashboard webserver add-service state-service todo-service todo-sql todo-stream watch-app run-app
+todo-ssr: build-ssr
+	dapr run -d=./components --app-id todo-ssr --app-port 3005 node todo-ssr.js
+
+start: dapr dashboard webserver add-service state-service todo-service todo-sql todo-stream todo-ssr run-app
 
 
 

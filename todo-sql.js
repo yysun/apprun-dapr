@@ -52,10 +52,11 @@ const run = async (req, res, fn) => {
   let result;
   try {
     const { event, data, wsid } = req.body.data;
-    result = await fn(db_fns, data);
-    result && publish('ws', {
-      event, data: result,
-      wsid: event === 'get-all-todo' ? '*' : wsid
+    result = await fn(db_fns, data || {});
+    result && publish(event === 'get-all-todo' ? 'all-todo' : event, {
+      event,
+      data: result,
+      wsid
     });
     res.status(200).send(result);
   } catch (ex) {
@@ -65,10 +66,10 @@ const run = async (req, res, fn) => {
 }
 
 app.post('/get-all-todo', async (req, res) => {
-  run(req, res, async ({ all } ) => {
+  run(req, res, async ({ all }, { filter } ) => {
     const sql = 'select * from todo';
     const todos = await all(sql);
-    return todos;
+    return { filter, todos };
   });
 });
 
@@ -88,9 +89,9 @@ app.post('/get-todo', (req, res) => {
 });
 
 app.post('/update-todo', async (req, res) => {
-  run(req, res, async ({ run }, { title, done, id}) => {
-    const sql = 'update todo set title=?, done=? where id=?';
-    await run(sql, title, done, id);
+  run(req, res, async ({ run }, { done, id }) => {
+    const sql = 'update todo set done=? where id=?';
+    await run(sql, done, id);
     // return { title, done, id };
   })
 });

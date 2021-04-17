@@ -7,3 +7,5 @@ coverage
 *.db
 public/main.js
 public/main.js.map
+todo-ssr.js
+todo-ssr.js.map
