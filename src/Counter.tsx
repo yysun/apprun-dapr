@@ -5,15 +5,14 @@ import './ws';
 const intro = `
 #### How It Works
 1. User click the buttons
-2. The Counter component publishes an AppRun local event ('-1' or '+1')
-3. The local event handler publishes an AppRun global event: '@ws' with payload _{event: 'add', data: [state, delta]}_
-4. AppRun global event handler sends the payload to the WebSocket
-5. The web server (index.js) receives the WebSocket message and then publishes an Dapr PubSub event
-6. The Dapr service (service.js) receives the Dapr event. It does the 'add' calculation and then publishes the result to Dapr PubSub
-7. The web server receives the Dapr event and send it back to the client through the WebSocket
-8. The client side app receives the WebSocket message and publishes an AppRun global event '@@'
-9. The Counter component handles the '@@add' event and sets the new state. AppRun renders the new state
-10. The '@@add' event is a WebSocket broadcast event, therefor all tabs will see the new counter value
+2. The local event handler publishes an AppRun event: '@ws' with payload _'add', state, (-1 or +1)_
+3. AppRun global event handler sends the payload to the WebSocket
+4. The web server (index.js) receives the WebSocket message and then publishes an Dapr PubSub event
+5. The Add service (add-service.js) receives the Dapr event. It does the 'add' calculation and then publishes the result to Dapr PubSub
+6. The web server receives the Dapr event and send it back to the client through the WebSocket
+7. The client side app receives the WebSocket message and publishes an AppRun global event '@@add'
+8. The Counter component handles the '@@add' event and sets the new state. AppRun renders the new state
+9. The '@@add' event is a WebSocket broadcast event, therefor all tabs will see the new counter value
 
 ### State Management
 1. The Counter component publishes the 'get-state' event to Dapr using the app_id as the key through the WebSocket
@@ -34,16 +33,14 @@ export default class Counter extends Component {
   view = state => location.hash === '#Counter' && <div>
     <h3>Counter</h3>
     <h1>{state}</h1>
-    <button $onclick='-1'>-1</button>
-    <button $onclick='+1'>+1</button>
+    <button $onclick={['@ws', 'add', [state, -1]]}>-1</button>
+    <button $onclick={['@ws', 'add', [state, +1]]}>+1</button>
     <hr />
     <div>{'_html:' + marked(intro)}</div>
   </div>;
 
   update = {
     '#Counter': state => state,
-    '-1': state => { app.run('@ws', 'add', [state, -1]) },
-    '+1': state => { app.run('@ws', 'add', [state, +1]) },
     '@@add': (_, v) => {
       const value = Number(v);
       app.run('@ws', 'save-state', { key: app_id, value });
