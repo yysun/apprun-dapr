@@ -1,5 +1,5 @@
 const { publish } = require('./dapr');
-
+const zipkin = require('./zipkin');
 const express = require('express');
 const webSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
@@ -20,13 +20,20 @@ app.get('/dapr/subscribe', (_req, res) => {
   ]);
 });
 
+const send = (id, json) => {
+  if (id && clients[id]) {
+    clients[id].send(json);
+    zipkin(json.event, 'webserver', 'frontend', id);
+  }
+};
+
 app.post('/ws', (req, res) => {
   const { wsid, event, data } = req.body.data;
   const json = JSON.stringify({ event, data});
   if (wsid === '*') {
-    for (let id in clients) clients[id]?.send(json);
+    for (let id in clients) send(id, json);
   }
-  else wsid && clients[wsid]?.send(json);
+  else send(wsid, json);
   res.sendStatus(200);
 });
 
@@ -42,6 +49,7 @@ wss.on('connection', function (ws, req) {
     try {
       const json = JSON.parse(msg);
       publish(json.event, { ...json, wsid });
+      zipkin(json.event, 'frontend', 'webserver', wsid);
     } catch (e) {
       ws.send(e.toString());
       console.error(e);
