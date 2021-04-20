@@ -23,7 +23,7 @@ app.get('/dapr/subscribe', (_req, res) => {
 const send = (id, json) => {
   if (id && clients[id]) {
     clients[id].send(json);
-    zipkin(json.event, 'webserver', 'frontend', id);
+    zipkin(json.event, 'webserver', 'frontend-'+id, id);
   }
 };
 
@@ -49,7 +49,7 @@ wss.on('connection', function (ws, req) {
     try {
       const json = JSON.parse(msg);
       publish(json.event, { ...json, wsid });
-      zipkin(json.event, 'frontend', 'webserver', wsid);
+      zipkin(json.event, 'frontend-'+wsid, 'webserver', wsid);
     } catch (e) {
       ws.send(e.toString());
       console.error(e);
